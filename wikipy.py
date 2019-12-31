@@ -33,18 +33,21 @@ for repElem in repElemList:
             pass
         elif repElemHref[-12:] == '/wiki/SpaceX':
             pass
+        elif repElemHref[-4:] == '.pdf':
+            pass
         elif 'youtube' in repElemHref:
             pass
         else:
             if repElemHref[:1] == '/':
                 repElemHref = 'https://en.wikipedia.org' + repElemHref
-            if repElemHref not in repElemList:
+            if repElemHref not in pagesToVisit:
                 pagesToVisit.append(repElemHref)
                 #print(repElemHref)
                 #print(" ")
                 count += 1
 print("Count: " + str(count))
-print(pagesToVisit)
+for p in pagesToVisit:
+    print(p)
 print(str(len(pagesToVisit)))
 
 with open('spaceX.csv', 'w', newline='') as f:
