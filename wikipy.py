@@ -3,7 +3,11 @@ import requests  #to download
 import bs4  #to extract data
 import csv
 
-res = requests.get('https://en.wikipedia.org/wiki/' + ' '.join(sys.argv[1:]))
+### When running, add a wikipedia page to start on (otherwise, will start at wikipedia home page)
+### For example: SpaceX
+### sys.argv (below) takes in this wikipedia page to start from
+
+res = requests.get('https://en.wikipedia.org/wiki/' + ' '.join(sys.argv[1:])) # when running, user adds page name eg. SpaceX
 res.raise_for_status() # to check for errors
 
 wiki = bs4.BeautifulSoup(res.text, "html.parser")   #res.text is text from page, html.parser will help structure text into html format
