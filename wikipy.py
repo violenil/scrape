@@ -7,52 +7,57 @@ import csv
 ### For example: SpaceX
 ### sys.argv (below) takes in this wikipedia page to start from
 
+def scrapeWiki(page):
+    res = requests.get(page)  #retrieves the page
+    res.raise_for_status()  #check for errors
+    wikiSoup = bs4.BeautifulSoup(res.text, "html.parser") #res.text is text from page, html.parser helps to structure the text into html format
+    wikiHeading = ""
+    for heading in wikiSoup.select('h1'):
+        wikiHeading += heading.getText()
+
+    wikiBody = ""
+    for body in wikiSoup.select('p'):
+        wikiBody += body.getText()
+    return([wikiHeading, wikiBody])
+
+#def scrapeOther(page):
+
+
 res = requests.get('https://en.wikipedia.org/wiki/' + ' '.join(sys.argv[1:])) # when running, user adds page name eg. SpaceX
-res.raise_for_status() # to check for errors
 
-wiki = bs4.BeautifulSoup(res.text, "html.parser")   #res.text is text from page, html.parser will help structure text into html format
+def retrieveLinks(page):
+    res = requests.get(page)
+    res.raise_for_status()
+    soup = bs4.BeautifulSoup(res.text, "html.parser")
+    wikiToVisit = []
+    otherToVisit = []
+    repElemList = soup.find_all('a')
+    for repElem in repElemList:
+        repElemHref = repElem.get('href')
+        if repElemHref:
+            if 'cite' in repElemHref:
+                pass
+            elif repElemHref[:1] == "#":
+                pass
+            elif repElemHref[-12:] == '/wiki/SpaceX':
+                pass
+            elif repElemHref[-4:] == '.pdf':
+                pass
+            elif 'youtube' in repElemHref:
+                pass
+            else:
+                if repElemHref[:1] == '/':
+                    repElemHref = 'https://en.wikipedia.org' + repElemHref
+                if 'wikipedia' in repElemHref:
+                    if repElemHref not in wikiToVisit:
+                        wikiToVisit.append(repElemHref)
+                elif repElemHref not in otherToVisit:
+                    otherToVisit.append(repElemHref)
+    return([wikiToVisit, otherToVisit])
 
-spaceXheading = ""
-for i in wiki.select('h1'):
-    spaceXheading += i.getText()
-
-spaceXbody = ""
-for i in wiki.select('p'):
-    spaceXbody += i.getText()
-    #print(i.getText())
-
-#print(spaceXheading)
-#print(spaceXbody)
-
-pagesToVisit = []
-
-count = 0
-repElemList = wiki.find_all('a')
-for repElem in repElemList:
-    repElemHref = repElem.get('href')
-    if repElemHref:
-        if 'cite' in repElemHref:
-            pass
-        elif repElemHref[:1] == "#":
-            pass
-        elif repElemHref[-12:] == '/wiki/SpaceX':
-            pass
-        elif repElemHref[-4:] == '.pdf':
-            pass
-        elif 'youtube' in repElemHref:
-            pass
-        else:
-            if repElemHref[:1] == '/':
-                repElemHref = 'https://en.wikipedia.org' + repElemHref
-            if repElemHref not in pagesToVisit:
-                pagesToVisit.append(repElemHref)
-                #print(repElemHref)
-                #print(" ")
-                count += 1
-print("Count: " + str(count))
-for p in pagesToVisit:
+for p in otherToVisit:
     print(p)
-print(str(len(pagesToVisit)))
+print(str(len(otherToVisit)))
 
 with open('spaceX.csv', 'w', newline='') as f:
     writer = csv.writer(f)
