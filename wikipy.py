@@ -59,6 +59,7 @@ for p in otherToVisit:
     print(p)
 print(str(len(otherToVisit)))
 
+
 with open('spaceX.csv', 'w', newline='') as f:
     writer = csv.writer(f)
     writer.writerow([spaceXheading, spaceXbody])
