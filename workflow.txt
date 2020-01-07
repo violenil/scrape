@@ -1,0 +1,13 @@
+** Things that need to be done **
+
+--> compile list of 100 Movie names
+
+--> scrape the 'contents' section from each movie page, as well as the first two paragraphs of the plot
+	'contents' will include: 
+		Directed By
+		Starring (actors)
+		Release Date
+
+--> markup in xml
+
+--> program the quiz with minimal complexity
